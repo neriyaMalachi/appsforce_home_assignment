@@ -20,6 +20,7 @@ export default function Users() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [usersPerPage] = useState(10);
+  const startIndex = (page - 1) * usersPerPage;
 
   useEffect(() => {
     const localData = localStorage.getItem("users");
@@ -51,14 +52,14 @@ export default function Users() {
   });
 
   const handleDelete = (user: User) => {
-    const isConfirmed = window.confirm("האם אתה בטוח שברצונך למחוק את המשתמש?");
+    const isConfirmed = window.confirm("Are you sure you want to delete this user?");
     if (isConfirmed) {
       const updatedUsers = allUsers.filter(
         (u) => u.login.uuid !== user.login.uuid
       );
       setAllUsers(updatedUsers);
       localStorage.setItem("users", JSON.stringify(updatedUsers));
-      alert("המשתמש נמחק בהצלחה!");
+      alert("Deleted Successfull ! ");
     }
   };
 
@@ -72,8 +73,6 @@ export default function Users() {
       localStorage.setItem("users", JSON.stringify(updatedUsers));
     }
   };
-
-  const startIndex = (page - 1) * usersPerPage;
 
   const paginatedUsers = filteredUsers.slice(
     startIndex,

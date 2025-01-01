@@ -5,7 +5,7 @@ import { SearchProps } from "@/app/types/SearchProps";
 
 const Search: React.FC<SearchProps> = ({ setSearchTerm, searchTerm }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value); // עדכון רק לשדה החיפוש
+    setSearchTerm(e.target.value);
   };
   return (
     <div className="flex items-center">
