@@ -3,7 +3,7 @@ import React from "react";
 import CardImage from "./CardImage";
 import CardDetails from "./CardDetails";
 import CardActions from "./CardActions";
-import  User  from "@/app/types/User";
+import User from "@/app/types/User";
 import { useQueryClient } from "@tanstack/react-query";
 import CardsComponent from "@/app/types/CardsComponent";
 
@@ -51,7 +51,11 @@ const Cards: React.FC<CardsComponent> = ({ user, handleEditClick, page }) => {
         street={`${user.location.street.name} ${user.location.street.number}`}
         uuid={user.login.uuid}
       />
-      <CardActions handleEditClick={handleEditClick} handleDelete={handleDelete} user={user} />
+      <CardActions
+        handleEditClick={handleEditClick}
+        handleDelete={handleDelete}
+        user={user}
+      />
     </div>
   );
 };

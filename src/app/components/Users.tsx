@@ -31,7 +31,7 @@ export default function Users() {
 
   useEffect(() => {
     if (data) {
-      setAllUsers((prevUsers) => [...prevUsers, ...data]);
+      setAllUsers(data);
     }
   }, [data]);
 
@@ -56,11 +56,10 @@ export default function Users() {
     }
   };
 
-
-
   const filteredUsers = allUsers.filter((user: User) => {
     const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
-    const location = `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
+    const location =
+      `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
     return (
       fullName.includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,50 +79,46 @@ export default function Users() {
 
   return (
     <div className="">
+      <NavBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+      <div className="max-w-7xl mx-auto p-4 z-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {filteredUsers.map((user: User) => (
+            <div className="" key={user.email}>
+              <Cards
+                user={user}
+                handleEditClick={handleEditClick}
+                page={page}
+              />
+            </div>
+          ))}
+        </div>
 
-      <NavBar
-        setSearchTerm={setSearchTerm}
-        searchTerm={searchTerm}
-      />
-    <div className="max-w-7xl mx-auto p-4 z-0">
+        <div className="flex justify-center items-center gap-4 mt-8">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
+          <span className="font-semibold">Page {page}</span>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {filteredUsers.map((user: User) => (
-          <div className="" key={user.email}>
-            <Cards user={user} handleEditClick={handleEditClick} page={page} />
-          </div>
-        ))}
+        {isEditModalOpen && selectedUser && (
+          <Modal
+            selectedUser={selectedUser}
+            handleSave={handleSave}
+            handleCancel={() => setIsEditModalOpen(false)}
+            setSelectedUser={setSelectedUser}
+          />
+        )}
       </div>
-
-      <div className="flex justify-center items-center gap-4 mt-8">
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <span className="font-semibold">Page {page}</span>
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Edit Modal */}
-      {isEditModalOpen && selectedUser && (
-        <Modal
-          selectedUser={selectedUser}
-          handleSave={handleSave}
-          handleCancel={() => setIsEditModalOpen(false)}
-          setSelectedUser={setSelectedUser}
-        />
-      )}
-
-    
-    </div>
     </div>
   );
 }

@@ -1,10 +1,6 @@
 // CardImage.tsx
 import Image from "next/image";
-
-interface CardImageProps {
-  imageSrc: string;
-  altText: string;
-}
+import { CardImageProps } from "@/app/types/CardImageProps";
 
 const CardImage: React.FC<CardImageProps> = ({ imageSrc, altText }) => (
   <Image

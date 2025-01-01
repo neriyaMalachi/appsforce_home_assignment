@@ -1,15 +1,10 @@
 import React, { useState } from "react";
+import { ModalAddUserProps } from "@/app/types/ModalAddUserProps";
 
-interface ModalAddUserProps {
-  handleSave: (newUser: {
-    name: { first: string; last: string };
-    email: string;
-    location: { country: string; city: string };
-  }) => void;
-  handleCancel: () => void;
-}
-
-const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel }) => {
+const ModalAddUser: React.FC<ModalAddUserProps> = ({
+  handleSave,
+  handleCancel,
+}) => {
   const [newUser, setNewUser] = useState({
     name: { first: "", last: "" },
     email: "",
@@ -18,6 +13,7 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  // פונקציה לעדכון ערכים בטופס
   const handleInputChange = (
     field: keyof typeof newUser,
     subField: string | null,
@@ -40,14 +36,14 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
   };
 
   const validateFields = () => {
-    if (newUser.name.first.length < 2) {
+    if (newUser.name.first.length < 3) {
       return "First name must be at least 2 characters.";
     }
-    if (newUser.name.last.length < 2) {
+    if (newUser.name.last.length < 3) {
       return "Last name must be at least 2 characters.";
     }
-    if (newUser.email.length < 3) {
-      return "Email must be at least 3 characters long.";
+    if (!/\S+@\S+\.\S+/.test(newUser.email)) {
+      return "Please enter a valid email address.";
     }
     if (newUser.location.country.length < 2) {
       return "Country must be at least 2 characters.";
@@ -55,16 +51,16 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
     if (newUser.location.city.length < 2) {
       return "City must be at least 2 characters.";
     }
-    return "";
+    return ""; 
   };
 
   const handleSaveClick = () => {
-    const validationError = validateFields();
+    const validationError = validateFields(); 
     if (validationError) {
-      setErrorMessage(validationError);
+      setErrorMessage(validationError); 
     } else {
-      setErrorMessage("");
-      handleSave(newUser);
+      setErrorMessage(""); 
+      handleSave(newUser); 
     }
   };
 
@@ -78,7 +74,9 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
             <input
               type="text"
               value={newUser.name.first}
-              onChange={(e) => handleInputChange("name", "first", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("name", "first", e.target.value)
+              }
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>
@@ -87,7 +85,9 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
             <input
               type="text"
               value={newUser.name.last}
-              onChange={(e) => handleInputChange("name", "last", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("name", "last", e.target.value)
+              }
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>
@@ -98,7 +98,7 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
               value={newUser.email}
               onChange={(e) => handleInputChange("email", null, e.target.value)}
               className="w-full px-3 py-2 border rounded-md"
-              pattern="\S+@\S+\.\S+" 
+              pattern="\S+@\S+\.\S+"
             />
           </div>
           <div>
@@ -106,7 +106,9 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
             <input
               type="text"
               value={newUser.location.country}
-              onChange={(e) => handleInputChange("location", "country", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("location", "country", e.target.value)
+              }
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>
@@ -115,7 +117,9 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({ handleSave, handleCancel })
             <input
               type="text"
               value={newUser.location.city}
-              onChange={(e) => handleInputChange("location", "city", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("location", "city", e.target.value)
+              }
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>

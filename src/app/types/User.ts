@@ -1,6 +1,6 @@
 export default interface User {
   login: { uuid: string };
-  id: string; // מזהה ייחודי
+  id: string;
   name: { title: string; first: string; last: string };
   email: string;
   picture: { medium: string };

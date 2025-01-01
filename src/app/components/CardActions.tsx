@@ -1,6 +1,4 @@
-// CardActions.tsx
 import { CardActionsProps } from "@/app/types/CardActionsProps";
-
 
 const CardActions: React.FC<CardActionsProps> = ({
   handleEditClick,
@@ -20,7 +18,6 @@ const CardActions: React.FC<CardActionsProps> = ({
     >
       Delete
     </button>
-   
   </div>
 );
 

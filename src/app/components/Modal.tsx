@@ -1,8 +1,12 @@
 import React from "react";
 import { ModalProps } from "@/app/types/ModalProps";
 
-const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, setSelectedUser }) => {
-
+const Modal: React.FC<ModalProps> = ({
+  selectedUser,
+  handleSave,
+  handleCancel,
+  setSelectedUser,
+}) => {
   // פונקציה שתבצע את הבדיקה אם הטופס תקין
   const handleSaveWithValidation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +26,9 @@ const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, s
         <h2 className="text-2xl font-semibold mb-4">Edit User</h2>
         <form className="space-y-4" onSubmit={handleSaveWithValidation}>
           <div>
-            <label className="block text-sm font-medium text-gray-700">First Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
             <input
               type="text"
               value={selectedUser.name.first}
@@ -39,7 +45,9 @@ const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, s
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Last Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
             <input
               type="text"
               value={selectedUser.name.last}
@@ -56,7 +64,9 @@ const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, s
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               value={selectedUser.email}
@@ -70,7 +80,9 @@ const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, s
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">City</label>
+            <label className="block text-sm font-medium text-gray-700">
+              City
+            </label>
             <input
               type="text"
               value={selectedUser.location.city}
@@ -86,7 +98,9 @@ const Modal: React.FC<ModalProps> = ({ selectedUser, handleSave, handleCancel, s
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Country</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Country
+            </label>
             <input
               type="text"
               value={selectedUser.location.country}
