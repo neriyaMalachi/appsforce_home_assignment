@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { ModalAddUserProps } from "@/app/types/ModalAddUserProps";
+import { z } from "zod";
 
 const ModalAddUser: React.FC<ModalAddUserProps> = ({
   handleSave,
   handleCancel,
 }) => {
+
   const [newUser, setNewUser] = useState({
     name: { first: "", last: "" },
     email: "",
@@ -13,7 +15,18 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  // פונקציה לעדכון ערכים בטופס
+  const userSchema = z.object({
+    name: z.object({
+      first: z.string().min(3, "First name must be at least 3 characters."),
+      last: z.string().min(3, "Last name must be at least 3 characters."),
+    }),
+    email: z.string().email("Please enter a valid email address."),
+    location: z.object({
+      country: z.string().min(2, "Country must be at least 2 characters."),
+      city: z.string().min(2, "City must be at least 2 characters."),
+    }),
+  });
+
   const handleInputChange = (
     field: keyof typeof newUser,
     subField: string | null,
@@ -36,31 +49,22 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
   };
 
   const validateFields = () => {
-    if (newUser.name.first.length < 3) {
-      return "First name must be at least 2 characters.";
+    try {
+      userSchema.parse(newUser); 
+      setErrorMessage("");
+      return true;
+    } catch (e) {
+      if (e instanceof z.ZodError) {
+        setErrorMessage(e.errors[0].message); 
+        return false;
+      }
+      return false;
     }
-    if (newUser.name.last.length < 3) {
-      return "Last name must be at least 2 characters.";
-    }
-    if (!/\S+@\S+\.\S+/.test(newUser.email)) {
-      return "Please enter a valid email address.";
-    }
-    if (newUser.location.country.length < 2) {
-      return "Country must be at least 2 characters.";
-    }
-    if (newUser.location.city.length < 2) {
-      return "City must be at least 2 characters.";
-    }
-    return ""; 
   };
 
   const handleSaveClick = () => {
-    const validationError = validateFields(); 
-    if (validationError) {
-      setErrorMessage(validationError); 
-    } else {
-      setErrorMessage(""); 
-      handleSave(newUser); 
+    if (validateFields()) {
+      handleSave(newUser);
     }
   };
 
@@ -98,7 +102,6 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
               value={newUser.email}
               onChange={(e) => handleInputChange("email", null, e.target.value)}
               className="w-full px-3 py-2 border rounded-md"
-              pattern="\S+@\S+\.\S+"
             />
           </div>
           <div>

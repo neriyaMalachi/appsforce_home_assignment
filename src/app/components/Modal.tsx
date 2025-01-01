@@ -1,5 +1,24 @@
 import React from "react";
+import { z } from "zod";
 import { ModalProps } from "@/app/types/ModalProps";
+
+const userSchema = z.object({
+  name: z.object({
+    first: z
+      .string()
+      .min(3, { message: "First name must be at least 3 characters" }),
+    last: z
+      .string()
+      .min(3, { message: "Last name must be at least 3 characters" }),
+  }),
+  email: z.string().email({ message: "Invalid email address" }),
+  location: z.object({
+    city: z.string().min(3, { message: "City must be at least 3 characters" }),
+    country: z
+      .string()
+      .min(3, { message: "Country must be at least 3 characters" }),
+  }),
+});
 
 const Modal: React.FC<ModalProps> = ({
   selectedUser,
@@ -7,16 +26,20 @@ const Modal: React.FC<ModalProps> = ({
   handleCancel,
   setSelectedUser,
 }) => {
-  // פונקציה שתבצע את הבדיקה אם הטופס תקין
+  const [messageError, setMessageError] = React.useState<string | null>(null);
+
   const handleSaveWithValidation = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // נבדוק אם הטופס תקין
-    const form = e.target as HTMLFormElement;
-    if (form.checkValidity()) {
-      handleSave(); // אם הטופס תקין, נבצע את שמירת המשתמש
-    } else {
-      form.reportValidity(); // נציג את הודעות השגיאה של HTML5
+    try {
+      userSchema.parse(selectedUser);
+      handleSave();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          setMessageError(err.message);
+        });
+      }
     }
   };
 
@@ -39,8 +62,6 @@ const Modal: React.FC<ModalProps> = ({
                 })
               }
               className="w-full p-2 border border-gray-300 rounded-md"
-              minLength={3}
-              required
             />
           </div>
 
@@ -58,8 +79,6 @@ const Modal: React.FC<ModalProps> = ({
                 })
               }
               className="w-full p-2 border border-gray-300 rounded-md"
-              minLength={3}
-              required
             />
           </div>
 
@@ -74,8 +93,6 @@ const Modal: React.FC<ModalProps> = ({
                 setSelectedUser({ ...selectedUser, email: e.target.value })
               }
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
-              pattern="\S+@\S+\.\S+" // אימות דוא"ל תקני
             />
           </div>
 
@@ -93,7 +110,6 @@ const Modal: React.FC<ModalProps> = ({
                 })
               }
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
             />
           </div>
 
@@ -114,10 +130,9 @@ const Modal: React.FC<ModalProps> = ({
                 })
               }
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
             />
           </div>
-
+          <p>{messageError}</p>
           <div className="mt-6 flex justify-end gap-4">
             <button
               onClick={handleCancel}

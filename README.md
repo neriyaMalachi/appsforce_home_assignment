@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Users Library App
 
-## Getting Started
+The **Users Library App** is a React and TypeScript application built using Next.js. It is designed to manage a library of users fetched from an external API with features like editing, deleting, and adding new users. The app is responsive, well-designed, and adheres to best practices for clean and modular code.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Core Features
+1. **User Listing**:
+   - Fetches user data from the [Random User API](https://randomuser.me/api/?results=10).
+   - Displays name, email, user image, and location.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Edit User**:
+   - Opens a modal to edit user details (Name, Email, Location).
+   - Includes validation:
+     - **Name**: Minimum of 3 characters.
+     - **Email**: Valid format and uniqueness.
+     - **Fields**: Cannot be empty.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Add User**:
+   - Opens a form to add a new user.
+   - Validates input as per the rules for editing users.
 
-## Learn More
+4. **Delete User**:
+   - Deletes a user with a confirmation prompt.
 
-To learn more about Next.js, take a look at the following resources:
+5. **Search Users**:
+   - Filters users by name, email, ID, or location.
+   - Implements client-side search.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Bonus Features
+1. **React Query**:
+   - Manages server state efficiently.
+   - Implements caching and background updates.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Responsive Design**:
+   - Works seamlessly across devices (desktop, tablet, and mobile).
 
-## Deploy on Vercel
+3. **Clean and Modular Code**:
+   - Adheres to DRY (Don’t Repeat Yourself) principles.
+   - Separates components, utilities, and types into their respective directories.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+### Frontend
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Language**: TypeScript
+- **UI Library**: Material-UI/Bootstrap (depending on the implementation)
+- **State Management**: React Query
+
+### Backend
+- **API**: [Random User API](https://randomuser.me/)
+
+### Styling
+- Styled Components/SCSS Modules for modular and reusable styling.
+
+---
+
+## Installation
+
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd users-library
