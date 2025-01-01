@@ -1,16 +1,14 @@
 "use client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import User from "@/app/types/User";
 import Cards from "./Cards";
 import Modal from "./Modal";
 import NavBar from "./NavBar";
 
-// פונקציה כדי למשוך את הנתונים
-const fetchUsers = async (page: number) => {
+const fetchUsers = async (total: number) => {
   const response = await axios.get(
-    `https://randomuser.me/api/?results=10&page=${page}`
+    `https://randomuser.me/api/?results=${total}`
   );
   return response.data.results;
 };
@@ -21,45 +19,29 @@ export default function Users() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
-
-  const queryClient = useQueryClient();
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["users", page],
-    queryFn: () => fetchUsers(page),
-  });
+  const [usersPerPage] = useState(10);
 
   useEffect(() => {
-    if (data) {
-      setAllUsers(data);
+    const localData = localStorage.getItem("users");
+    if (localData) {
+      setAllUsers(JSON.parse(localData));
+    } else {
+      const fetchData = async () => {
+        try {
+          const users = await fetchUsers(100); 
+          setAllUsers(users);
+          localStorage.setItem("users", JSON.stringify(users));
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
+      };
+      fetchData();
     }
-  }, [data]);
+  }, []);
 
-  const handleEditClick = (user: User) => {
-    setSelectedUser(user);
-    setIsEditModalOpen(true);
-  };
-
-  const handleSave = async () => {
-    try {
-      if (selectedUser) {
-        const updatedUsers = allUsers.map((user: User) =>
-          user.login.uuid === selectedUser.login.uuid ? selectedUser : user
-        );
-        setAllUsers(updatedUsers);
-        setIsEditModalOpen(false);
-        queryClient.setQueryData(["users", page], updatedUsers);
-        console.log("User updated successfully!");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-
-  const filteredUsers = allUsers.filter((user: User) => {
+  const filteredUsers = allUsers.filter((user) => {
     const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
-    const location =
-      `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
+    const location = `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
     return (
       fullName.includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -68,26 +50,53 @@ export default function Users() {
     );
   });
 
-  if (isLoading && allUsers.length === 0)
+  const handleDelete = (user: User) => {
+    const isConfirmed = window.confirm("האם אתה בטוח שברצונך למחוק את המשתמש?");
+    if (isConfirmed) {
+      const updatedUsers = allUsers.filter(
+        (u) => u.login.uuid !== user.login.uuid
+      );
+      setAllUsers(updatedUsers);
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+      alert("המשתמש נמחק בהצלחה!");
+    }
+  };
+
+  const handleSave = () => {
+    if (selectedUser) {
+      const updatedUsers = allUsers.map((user) =>
+        user.login.uuid === selectedUser.login.uuid ? selectedUser : user
+      );
+      setAllUsers(updatedUsers);
+      setIsEditModalOpen(false);
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+    }
+  };
+
+  const startIndex = (page - 1) * usersPerPage;
+
+  const paginatedUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + usersPerPage
+  );
+
+  if (allUsers.length === 0)
     return <div className="text-center text-xl">Loading...</div>;
-  if (error)
-    return (
-      <div className="text-center text-xl text-red-500">
-        Error loading users
-      </div>
-    );
 
   return (
-    <div className="">
+    <div>
       <NavBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <div className="max-w-7xl mx-auto p-4 z-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredUsers.map((user: User) => (
-            <div className="" key={user.email}>
+          {paginatedUsers.map((user) => (
+            <div key={user.login.uuid}>
               <Cards
                 user={user}
-                handleEditClick={handleEditClick}
-                page={page}
+                handleEditClick={(user) => {
+                  setSelectedUser(user);
+                  setIsEditModalOpen(true);
+                }}
+                handleDelete={handleDelete}
               />
             </div>
           ))}
@@ -104,7 +113,13 @@ export default function Users() {
           <span className="font-semibold">Page {page}</span>
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-            onClick={() => setPage((prev) => prev + 1)}
+            onClick={() =>
+              setPage((prev) =>
+                prev < Math.ceil(filteredUsers.length / usersPerPage)
+                  ? prev + 1
+                  : prev
+              )
+            }
           >
             Next
           </button>

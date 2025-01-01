@@ -1,6 +1,6 @@
 import User from "./User";
 export default interface CardsProps {
   user: User;
-  page: number;
+  handleDelete:(user: User) => void;
   handleEditClick: (user: User) => void;
 }

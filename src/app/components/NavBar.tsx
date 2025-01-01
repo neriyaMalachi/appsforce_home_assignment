@@ -19,12 +19,12 @@ const NavBar: React.FC<NavBarProps> = ({ setSearchTerm, searchTerm }) => {
   };
 
   return (
-    <nav className="p-4 flex justify-around items-center">
+    <nav className="p-4 flex justify-around bg-slate-500 items-center">
       <Search setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <button
         id="add-user"
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+        className="p-2 font-bold text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
       >
         Add User
       </button>
