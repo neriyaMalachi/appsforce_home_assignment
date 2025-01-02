@@ -23,20 +23,22 @@ export default function Users() {
   const startIndex = (page - 1) * usersPerPage;
 
   useEffect(() => {
-    const localData = localStorage.getItem("users");
-    if (localData) {
-      setAllUsers(JSON.parse(localData));
-    } else {
-      const fetchData = async () => {
-        try {
-          const users = await fetchUsers(100); 
-          setAllUsers(users);
-          localStorage.setItem("users", JSON.stringify(users));
-        } catch (error) {
-          console.error("Error fetching users:", error);
-        }
-      };
-      fetchData();
+    if (typeof window !== "undefined") { // בדיקה שהקוד רץ בדפדפן
+      const localData = localStorage.getItem("users");
+      if (localData) {
+        setAllUsers(JSON.parse(localData));
+      } else {
+        const fetchData = async () => {
+          try {
+            const users = await fetchUsers(100); 
+            setAllUsers(users);
+            localStorage.setItem("users", JSON.stringify(users));
+          } catch (error) {
+            console.error("Error fetching users:", error);
+          }
+        };
+        fetchData();
+      }
     }
   }, []);
 
