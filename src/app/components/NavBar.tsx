@@ -1,3 +1,4 @@
+'use client'
 import { NavBarProps } from "../types/NavBarProps";
 import Search from "./Search";
 import { useState } from "react";
