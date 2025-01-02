@@ -40,7 +40,9 @@ export default function Users() {
     }
   }, []);
 
-  const filteredUsers = allUsers.filter((user) => {
+  const filteredUsers = JSON.parse(
+    localStorage.getItem("users") || "[]"
+  ).filter((user: User) => {
     const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
     const location = `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
     return (
@@ -65,12 +67,24 @@ export default function Users() {
 
   const handleSave = () => {
     if (selectedUser) {
+
+      if (!selectedUser.name || !selectedUser.login) {
+        console.error("Selected user is missing required properties:", selectedUser);
+        alert("Error: Selected user data is incomplete. Please try again.");
+        return;
+      }
       const updatedUsers = allUsers.map((user) =>
         user.login.uuid === selectedUser.login.uuid ? selectedUser : user
       );
       setAllUsers(updatedUsers);
       setIsEditModalOpen(false);
       localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+      try {
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      } catch (error) {
+        console.error("Error saving updated users to localStorage:", error);
+      }
     }
   };
 
@@ -87,7 +101,7 @@ export default function Users() {
       <NavBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <div className="max-w-7xl mx-auto p-4 z-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {paginatedUsers.map((user) => (
+          {paginatedUsers.map((user:User) => (
             <div key={user.login.uuid}>
               <Cards
                 user={user}

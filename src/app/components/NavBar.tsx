@@ -19,7 +19,7 @@ const NavBar: React.FC<NavBarProps> = ({ setSearchTerm, searchTerm }) => {
   };
 
   return (
-    <nav className="p-4 flex justify-around bg-slate-500 items-center">
+    <nav className="p-4 flex justify-around items-center">
       <Search setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <button
         id="add-user"
