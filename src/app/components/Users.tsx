@@ -42,9 +42,7 @@ export default function Users() {
     }
   }, []);
 
-  const filteredUsers = JSON.parse(
-    localStorage?.getItem("users") || "[]"
-  ).filter((user: User) => {
+  const filteredUsers = allUsers.filter((user) => {
     const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
     const location = `${user.location.country} ${user.location.city} ${user.location.street.name}`.toLowerCase();
     return (
