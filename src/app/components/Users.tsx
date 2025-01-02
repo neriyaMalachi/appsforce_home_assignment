@@ -1,17 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
+// import axios from "axios";
 import User from "@/app/types/User";
 import Cards from "./Cards";
 import Modal from "./Modal";
 import NavBar from "./NavBar";
 
-const fetchUsers = async (total: number) => {
-  const response = await axios.get(
-    `https://randomuser.me/api/?results=${total}`
-  );
-  return response.data.results;
-};
+// const fetchUsers = async (total: number) => {
+//   const response = await axios.get(
+//     `https://randomuser.me/api/?results=${total}`
+//   );
+//   return response.data.results;
+// };
 
 export default function Users() {
   const [page, setPage] = useState(1);
@@ -22,25 +22,25 @@ export default function Users() {
   const [usersPerPage] = useState(10);
   const startIndex = (page - 1) * usersPerPage;
 
-  useEffect(() => {
-    if (typeof window !== "undefined") { // בדיקה שהקוד רץ בדפדפן
-      const localData = localStorage.getItem("users");
-      if (localData) {
-        setAllUsers(JSON.parse(localData));
-      } else {
-        const fetchData = async () => {
-          try {
-            const users = await fetchUsers(100); 
-            setAllUsers(users);
-            localStorage.setItem("users", JSON.stringify(users));
-          } catch (error) {
-            console.error("Error fetching users:", error);
-          }
-        };
-        fetchData();
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") { // בדיקה שהקוד רץ בדפדפן
+  //     const localData = localStorage.getItem("users");
+  //     if (localData) {
+  //       setAllUsers(JSON.parse(localData));
+  //     } else {
+  //       const fetchData = async () => {
+  //         try {
+  //           const users = await fetchUsers(100); 
+  //           setAllUsers(users);
+  //           localStorage.setItem("users", JSON.stringify(users));
+  //         } catch (error) {
+  //           console.error("Error fetching users:", error);
+  //         }
+  //       };
+  //       fetchData();
+  //     }
+  //   }
+  // }, []);
 
   const filteredUsers = JSON.parse(
     localStorage.getItem("users") || "[]"
