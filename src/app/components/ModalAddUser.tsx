@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { ModalAddUserProps } from "@/app/types/ModalAddUserProps";
 import { z } from "zod";
